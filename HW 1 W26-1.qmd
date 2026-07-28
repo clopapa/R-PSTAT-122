@@ -1,0 +1,210 @@
+---
+title: 'Homework 1'
+subtitle: "PSTAT 122: Design and Analysis of Experiments" 
+
+author: "Instructor: Ali Abuzaid"
+format: 
+ pdf:
+    code-fold: true
+    code-line-numbers: true
+    code-copy: true
+    code-tools: true
+    self-contained: true
+    toc: false
+    toc-location: left
+    number-sections: true
+    geometry: margin=0.7in 
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message =  FALSE)
+knitr::opts_chunk$set(warning =  FALSE)
+knitr::opts_chunk$set(error =  FALSE)
+bfcolor <- function(x, color) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{\\textbf{%s}}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'><b>%s</b></span>", color, x)
+  } else x
+}
+```
+
+
+:::callout
+<div style="text-align: center">
+<span style="color: blue;"> **STUDENT NAME **</span>  
+</div>
+- STUDENT NAME (Perm Number)
+
+
+:::
+
+:::{.callout-tip}
+# Instructions
+
+
+* Please write your **full name** and **perm number** legibly on the front page of your homework sheet.
+
+* This homework must be completed and submitted **individually**. Collaboration is allowed for discussion, but each student must submit their own work.
+
+* Solve all homework problems. You may use `R` for your calculations and analysis, but you must include all `R` code used.  
+
+* Your reasoning must be clear and complete. To receive full credit, provide sufficient explanations alongside any code and results.
+
+* Ensure that all `R` code, mathematical formulas, and workings are presented clearly and appropriately.
+
+* All figures should be numbered, and axes must be labeled. 
+
+* Please use the provided `HW 1 W26.qmd` file to type your solutions and submit the completed assignment as a PDF file. You can utilize `RStudio` for this purpose. For guidance, refer to the [Tutorial: Hello, Quarto](https://quarto.org/docs/get-started/hello/rstudio.html)).
+
+* Submit your solution via **Gradescope** as **a single PDF file**.
+
+
+:::
+
+:::{.callout-caution}
+# Due Date
+**Due Date:** January 18, 2025, 11:59 PM
+:::
+
+\newpage
+
+:::{.callout-important}
+## Question 1 
+
+Suppose that you want to investigate the factors that potentially affect the growth of a houseplant.
+
+a) What would you use as a response variable in this experiment? How would you measure the response?
+
+b) List all of the potential sources of variability that could impact the response.
+
+c) Complete the first three steps of the guidelines for designing experiments in Section 1.4 (slide 44).
+::: 
+
+`r bfcolor("ANSWERS TO QUESTION 1:", "red")` \
+
+_**Replace this line with your answers**_ \
+
+
+
+\newpage
+:::{.callout-important}
+## Question 2 
+     Let $X \sim N(0,1)$ and $Y = X^2$
+   
+   - (a) Find Cov$(X,Y)$.  
+   - (b) Find $P(Y > 1 \mid X = 1.5)$ and $P(Y > 1 \mid X = -0.3)$.  
+   - (c) What dou you conclude from (a) and (b)?  
+     
+   **Note**: *We have shown in class that if two random variables are independent then they are uncorrelated. Here we see that the converse is not true.*
+   
+:::  
+   
+ 
+`r bfcolor("ANSWERS TO QUESTION 2:", "red")` \
+
+_**Replace this line with your answers**_ \
+
+
+
+\newpage
+:::{.callout-important}
+## Question 3 
+
+The following data represent the **battery life (in hours) of 20 smartphones** tested under standardized video-playback conditions in a consumer electronics study.
+
+$$
+9.8\quad 11.2\quad 10.5\quad 12.1\quad 8.9\quad 10.9\quad 11.5\quad 9.3\quad 10.1\quad 12.4
+$$
+$$
+8.7\quad 11.8\quad 10.6\quad 9.9\quad 10.3\quad 11.0\quad 9.1\quad 12.0\quad 10.8\quad 9.5
+$$
+
+a) Find the sample mean, median, interquartile range, and sample standard deviation.
+
+b) What percentage of values lie within 2 standard deviations of the mean?
+
+c) Find the Z-score for the value 8.9.
+
+d) Construct a boxplot and comment on the distribution.
+:::
+
+`r bfcolor("ANSWERS TO QUESTION 3:", "red")` \
+
+_**Replace this line with your answers**_ \
+
+
+\newpage
+:::{.callout-important}
+## Question 4 
+
+$A$ is the mean and $B$ is the standard deviation of $n$ values. We multiply each value by $a$ and add $b$ to the product.
+
+a) What are the mean and standard deviation of the new values? 
+
+b) Suppose the original dataset has sample mean $\bar{x} = 12, s_x = 3$ with a and $n = 10$ . After transformation, the new dataset has $\bar{y} = 33, s_y = 6$. Find the values of $a$ and $b$.
+Show your calculations.
+:::
+
+
+`r bfcolor("ANSWERS TO QUESTION 4:", "red")` \
+
+_**Replace this line with your answers**_ \
+
+
+
+
+
+\newpage
+:::{.callout-important}
+## Question 5 
+
+Is there sufficient evidence to indicate that the average number of meters per week spent practicing breaststroke is greater for exclusive breaststrokers than it is for those swimming individual medley?
+
+**Data Summary:**
+
+| Specialty | Exclusively Breaststroke | Individual Medley |
+|----------|---------------------------|--------------------|
+| Sample size (n) | 130 | 80 |
+| Sample mean ($\bar{x}$) | 9017 m | 5853 m |
+| Sample standard deviation (s) | 7162 m | 1961 m |
+a) State the null and alternative hypotheses.
+
+b) What is the appropriate rejection region for an $\alpha = 0.01$ level test?
+	
+c) Calculate the observed value of the appropriate test statistic.
+
+d) What is your conclusion?
+
+e)  What is a practical reason for the conclusion you reached in part (d)?
+
+::: 
+`r bfcolor("ANSWERS TO QUESTION 5:", "red")` \
+
+_**Replace this line with your answers**_ \
+
+
+
+
+
+\newpage
+:::{.callout-important}
+## Question 6 
+
+
+The state of California is working hard to ensure that all elementary-age students whose native language is not English become proficient in English by the sixth grade. Their progress is monitored each year using the California English Language Development Test. The results for two school districts in southern California for the 2003 school year are given in the following table.
+
+
+
+| District     | Riverside | Palm Springs |
+|--------------|-----------|--------------|
+| Students     | 6124      | 5512         |
+| % Fluent     | 40%       | 37%          |
+
+Do the data indicate a significant difference in the 2003 proportions of students who are fluent in English for the two districts? Use $\alpha = 0.01$.
+:::
+
+`r bfcolor("ANSWERS TO QUESTION 6:", "red")` \
+
+_**Replace this line with your answers**_ \
+
+
