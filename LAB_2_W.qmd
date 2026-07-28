@@ -1,0 +1,213 @@
+---
+title: 'Week 4 (LAB2): Analysis of Variance'
+subtitle: "PSTAT122: Design and Analysis of Experiments" 
+
+author:
+  - name: "Ali Abuzaid"
+    affiliations:
+      - name: "Winter 2026"
+affiliation-title: "Quarter"
+format:pdf
+ pdf:
+    code-fold: true
+    code-line-numbers: true
+    code-copy: true
+    code-tools: true
+    self-contained: true
+    toc: false
+    toc-location: left
+    number-sections: true
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message =  FALSE)
+knitr::opts_chunk$set(warning =  FALSE)
+knitr::opts_chunk$set(error =  FALSE)
+bfcolor <- function(x, color) {
+  if (knitr::is_latex_output()) {
+    sprintf("\\textcolor{%s}{\\textbf{%s}}", color, x)
+  } else if (knitr::is_html_output()) {
+    sprintf("<span style='color: %s;'><b>%s</b></span>", color, x)
+  } else x
+}
+```
+
+
+:::{.callout-tip}
+# Submission Instructions
+
+
+* This LAB must be completed and submitted **individually**. Collaboration is allowed for discussion, but each student must submit their own work.
+
+* Ensure that all `R` code are presented clearly and appropriately.
+
+* All figures should be numbered, and axes must be labeled. 
+
+* Please use the provided `LAB 2 M.qmd` file to type your solutions and submit the completed LAB as a PDF file. 
+
+You can utilize `RStudio` for this purpose. For guidance, refer to the [Tutorial: Hello, Quarto](https://quarto.org/docs/get-started/hello/rstudio.html)).
+
+* * Submit your solution via **Gradescope** as **a single PDF file**.
+
+:::
+
+:::{.callout-caution}
+# Due Date
+**Due Date:** Friday, January 30, 2026, 11:59 PM
+:::
+ 
+:::{.callout-important}
+# Overview
+In this assignment, you will implement the ANOVA (Analysis of Variance) procedure from scratch, using basic operations in `R`. You’ll compare your custom function's output with the built-in `aov` function to ensure correctness, and apply it to real datasets from class examples and homework.
+:::
+
+# Objectives:
+
+1. Develop a custom ANOVA function that works with unbalanced datasets.
+
+2. Validate your function by comparing its output to `R`’s built-in `aov` function.
+
+3. Apply the function to multiple datasets to demonstrate its accuracy and versatility.
+
+
+
+:::{.callout-important}
+# Implementing ANOVA from Scratch   (15 Points)
+Write a function to perform ANOVA from scratch on any arbitrary dataframe.
+
+ - Your function needs to 
+ - take a `dataframe` as its input.
+ - expect that the dataframe will have two columns:
+ - the outcome variable in the first column
+ - the factor variable in the second column
+ - It should do the version of the calculations from the slides that do not rely on having a balanced dataset (i.e consider different values of $n_i$ as in slide 51 of Chapter 3). Include a code comment that indicates exactly where in your calculations you are doing this.
+   
+- It should output the same exact values that a `summary` of the `aov` function does, in a matrix with the proper column and row names (elements of the matrix that have nothing in it should be filled in with `NA`).
+
+:::
+
+`r bfcolor("ANSWERS TO Implementing ANOVA from Scratch:", "red")` \
+_**Replace this line with your answers**_ \
+
+my_anova <- function(df){
+# Expected input is df must have:
+#     column 1 = response variable (y)
+#     column 2 = facotr (group)
+y <- df[[1]]
+group <- as.factor(df[[2]])
+
+# Remove missing values
+df2 <- data.frame(y, group) %>% na.omit()
+
+# Grand mean
+y_bar <- mean(df2$y)
+
+#Total obs
+n_obs <- nrow(df2)
+
+# GROUP SUMMARY STATISTICS
+# for each i compute n_i the sample size in group i, y_bar_i the group mean and s_i the group variance
+summary <- df2 %>%
+  group_by(group) %>%
+  summarise(
+    y_bar_i = mean(y),
+    s_i = var(y),
+    n_i = n(),
+    .groups = "drop"
+  )
+
+# number of groups a
+n_groups <- nrow(summary)
+
+# SUMS OF SQUARES
+# base on y_ij = M + T_i + e_ij
+
+# Treatment of sum of quares
+# !!!!! THIS LINE HALNDES UNBALANCED DATA !!!!!!!
+SSTreat <- sum(summary$n_i * (summary$y_bar_i - y_bar)^2)
+
+# Error Sum of Squares
+SSE <- sum((summary$n_i -1) * summary$s_i) 
+
+SSTotal <- SSTreat + SSE
+
+# Degrees Freedom
+df_treat <- n_groups -1 
+df_error <- n_obs - n_groups
+df_total <- n_obs -1
+# Mean Squares
+MSTreat <- SSTreat / df_treat
+MSError <- SSE / df_error
+
+# F Stat to test H0
+FValue <- MSTreat / MSError
+pvalue <- pf(FValue, df_treat, df_error, lower.tail = FALSE)
+
+# Output matching summary aov
+result <- matrix(
+  c(df_treat, SSTreat, MSTreat, FValue, pvalue,
+    df_error, SSE, MSError,NA, NA),
+    nrow = 2, byrow = TRUE
+)
+
+colnames(result) <- c("Df", "Sum Sq", "Mean Sq", "F Value", "Pr(>F)")
+rownames(result) <- c("display", "Residuals")
+return(result)
+}
+
+
+
+\newpage
+:::{.callout-important}
+# Testing on Class Example Datasets  (10 Points)
+Test this function on the navigation data from Chapter 3 (Soft Drink) and (Paper Strength). Also re-run the `aov` function with its `summary` here to show that you get the same values either way.  
+:::
+
+`r bfcolor("ANSWERS TO Testing on Class Example Datasets:", "red")` \
+# 2.2 Testing Data on Class Example Datasets
+# Soft Drink
+softdrink <- data.frame(
+  increase = c(5.43, 5.71, 6.22, 6.01, 5.29,
+                6.24, 6.71, 5.98, 5.66, 6.60,
+                8.79, 9.20, 7.90, 8.15, 7.55),
+  display = factor(rep(1:3, each = 5))
+)
+
+my_anova(softdrink)
+
+summary(aov(increase~display, data = softdrink))
+
+# Paper strength
+paper <- read.csv("paper_strength.csv")
+paper$TS.kPa <- as.numeric(paper$TS.kPa)
+paper$Fiber.type <- as.factor(paper$Fiber.type)
+my_anova(paper[, c("TS.kPa", "Fiber.type")])
+summary(aov(TS.kPa ~ Fiber.type, data = paper))
+
+
+
+\newpage
+:::{.callout-important}
+# Testing on Homework Dataset    (5 Points)
+Test your function on the data from Question 5 in the Homework 2. Run the `aov` function with its `summary` here as well to show that you get the same values either way. 
+:::
+`r bfcolor("ANSWERS TO Testing on Homework Dataset:", "red")` \
+
+# Test with Q5 from HW2
+library(dplyr)
+curing <- data.frame(Method = 1:4,
+  Strength1 = c(42.5, 45.1, 38.9, 36.2),
+  Strength2 = c(40.8, 46.3, 40.1, 37.4),
+  Strength3 = c(39.6, 44.0, 41.5, 35.8),
+  Strength4 = c(41.2, 45.7, 42.0, 38.0)
+)
+
+curing2 <-data.frame(
+  Method = rep(curing$Method, times = 4),
+  Strength = c(curing$Strength1, curing$Strength2, curing$Strength3,                           curing$Strength4)
+)
+  
+curing2$Method <- factor(curing2$Method)
+print(curing2)
+
+my_anova(curing2[, c("Strength", "Method")])
+summary(aov(Strength ~ Method, data = curing2))
